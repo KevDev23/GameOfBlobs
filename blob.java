@@ -10,6 +10,7 @@ public class blob{
     int xnext; //next x coordinate
     int ynext; // next y coordinate
     boolean validmove;
+	boolean eaten;
 		
 		public void print(){//prints blob data
 			System.out.println("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
@@ -31,6 +32,7 @@ public class blob{
 			this.size = rando; 
 			
 			this.validmove = true;
+			this.eaten = false
 			this.xnext = 0;
 			this.ynext = 0;
 			this.blobid = id;
@@ -44,14 +46,14 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-				if((blobArray[searchingBlob].size > blobArray[i].size) && (blobArray[i].size != 0))//if possible prey blob is smaller than searchingBlob and hasn't been eaten(denoted by size = 0)
+				if((blobArray[searchingBlob].size > blobArray[i].size) && (blobArray[i].eaten == false))//Select prey and if prey has not been eaten
 				{
 					if(closest == -1)//if we haven't selected a possible canidate for a blob to consume set the first possible blob as the selected meal
 					{	
 						closest = i;
 					}
 					else{
-							if(blobArray[temp].size < blobArray[i].size)//Selects new prey canidate if blobArray[i].size is larger than the current selected blob
+							if(blobArray[closest].size < blobArray[i].size)//Selects new prey canidate if blobArray[i].size is larger than the current selected blob
 							{
 								closest = i;
 							}
@@ -66,56 +68,44 @@ public class blob{
 			
 		}
 		
-		public void movement(int numblob,blob[] blobArray){//decides what xnext and what ynext is and aplies it
+		public void movement(int numblob,blob[] blobArray){//decides what xnext and what ynext is
 			
 			int meal = 0;//will be the blob to be consume
 			int xDistance = 0;
 			int yDistance = 0;
 			
-			
-				for(int i = 0; i < numblob; i++)//for each blob
-				{
 					meal = closestBlob(numblob,blobArray[i].blobid,blobArray);
 					
 					if(meal != -1)//if meal is -1 then the blob closestBlob returned cannot move so we skip it, else we work on finding out it's new movement
 					{	
-						xDistance = max(blobArray[i].xcoord,blobArray[meal].xcoord) - min(blobArray[i].xcoord,blobArray[meal].xcoord);
-						yDistance = max(blobArray[i].ycoord,blobArray[meal].ycoord) - min(blobArray[i].ycoord,blobArray[meal].ycoord);
+						xDistance = Math.max(this.xcoord,blobArray[meal].xcoord) - Math.min(this.xcoord,blobArray[meal].xcoord);
+						yDistance = Math.max(this.ycoord,blobArray[meal].ycoord) - Math.min(this.ycoord,blobArray[meal].ycoord);
 						
 						if(xDistance < yDistance)//if blob is closer on the x-axis
 						{
-							if(blobArray[i].xcoord > blobArray[meal].xcoord)//if the blob looking for a meal is farther on the x-axis we need to decrement it
+							if(this.xcoord > blobArray[meal].xcoord)//if the blob looking for a meal is farther on the x-axis we need to decrement it
 							{
-								blobArray[i].xnext = blobArray[i].xcoord--;
+								this.xnext = this.xcoord--;
 							}
 							else{
-								  blobArray[i].xnext = blobArray[i].xcoord++;
+								  this.xnext = this.xcoord++;
 								}
-						blobArray[i].ynext = blobArray[i].ycoord;//the y-coordinates will not change
+						this.ynext = this.ycoord;//the y-coordinates will not change
 						}
 						else{
-								if(blobArray[i].ycoord > blobArray[meal].ycoord)//if blob looking for meal is farther on the y-axis...
+								if(this.ycoord > blobArray[meal].ycoord)//if blob looking for meal is farther on the y-axis...
 								{
-									blobArray[i].ynext = blobArray[i].ycoord--;//decrease the y-axis coordinate
+									this.ynext = this.ycoord--;//decrease the y-axis coordinate
 								}
 								else{
-									  blobArray[i].ynext = blobArray[i].ycoord++;//increase the y-axis coordinate
+									  this.ynext = this.ycoord++;//increase the y-axis coordinate
 									}
-							blobArray[i].xnext = blobArray[i].xcoord;//the x-coordinates will not change 
+							this.xnext = this.xcoord;//the x-coordinates will not change 
 							}
 					}
 					else{
-						 blobArray[i].validmove = false;//set valid moves to false since meal == -1 indicating the blob can no longer move
+						 this.validmove = false;//set valid moves to false since meal == -1 indicating the blob can no longer move
 						}
-					
-				}
-				
-				//applying movement
-				for(int j = 0; j < numblob; j++)
-				{
-					blobArray[j].xcoord = blobArray[j].xnext;
-					blobArray[j].ycoord = blobArray[j].ynext;
-				}
 		}
 		
 		//will merge blobs with the same coordinates
@@ -123,30 +113,28 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-				for(int j = 0; j < numblob; j++)
-				{
-					if((blobArray[i].xcoord == blobArray[j].xcoord) && (blobArray[i].ycoord == blobArray[j].ycoord))//are 2 blobs on the same coordinates?
+					if((blobArray[i].xcoord == this.xcoord) && (blobArray[i].ycoord == this.ycoord))//are 2 blobs on the same coordinates?
 					{
-						if(blobArray[i].size > blobArray[j].size)
+						if(this.size > blobArray[i].size)
 						{
-							blobArray[i].size += blobArray[j].size;
-							blobArray[j].size = 0;//this blob was eaten so it's size is registered as 0
-							blobArray[j].validmove = false;//cannot move since it was eaten
+							this.size += blobArray[i].size;
 						}
 						
-						if(blobArray[i].size < blobArray[j].size)
+						if(this.size < blobArray[i].size)//if this blob will be eaten
 						{
-							blobArray[j].size += blobArray[i].size;
-							blobArray[i].size = 0;//this blob was eaten so it's size is set to 0
-							blobArray[i].validmove = false;
+						  this.eaten = true;//to signify it is eaten
 						}
-						//if the blobs are equal in size then neither gets eaten
+						//if this blob is larger than it's fellow it will eat it
 					}						
-				}
+			
 			}
 			
 		}
 		
+		public void applymovement(){//applying movement
+				this.xcoord = this.xnext;
+				this.ycoord = this.ynext;
+		}
 		//checks to see if blobs still have a valid movement, game ends when no blobs have a valid move
 		public boolean checkMove(int numblob,blob[] blobArray){
 			int count = 0;

@@ -16,7 +16,7 @@ class gob{
 		boolean cycle = true;//for the while loop
 		
 		blob blobArray[] = new blob[numBlob];//creating obj array
-		blob blobManager = new blob();//blob object that will perform actions 
+		
 		
 		for(int i = 0; i < numBlob; i++)//setting up blobs
 		{
@@ -27,50 +27,23 @@ class gob{
 		
 		while(cycle)//while there are valid mvoes
 		{
-			blobManager.movement(numBlob,blobArray);
-			blobManager.merge(numBlob,blobArray);
+			for(int i = 0; i < numBlob; i++)//finds food, and decides on which axis to move on
+				blobArray[i].movement(numBlob,blobArray);
 			
-			cycle = blobManager.moveCheck(numBlob,blobArray);
+			for(int j = 0; j < numBlob; j++)//applies this movement
+				blobArray[j].applymovement();
+			
+			for(int k = 0; k < numBlob; k++)//merges
+				blobArray[k].merge(numBlob,blobArray);
+					
 		}
 		
 		System.out.println("==============Here are the winners!==========");
 		for(int j = 0; j < numBlob; j++)
 		{
-			if(blobArray[j].size != 0)
+			if(blobArray[j].eaten == false)
 				blobArray[j].print();
 		}
 		
 	}
 }
-
-//blob class defines a blobs variables and class methods
-/*class blob{
-	
-	private int xcoord;
-	private int ycoord;
-	private int size;
-	private int blobid;//identifies blob
-	private int xnext; //next x coordinate
-    private int ynext; // next y coordinate
-		
-		public void print(){//prints blob data
-			System.out.println("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
-		}
-		
-		public void init(int id){//initializes x,y coordinates and it's size
-			Random rand = new Random();
-			int rando = rand.nextInt(999) + 1;
-				
-			this.xcoord = rando;
-				
-			rando = rand.nextInt(999) + 1;
-				
-			this.ycoord = rando;
-				
-			rando = rand.nextInt(999) + 1;
-				
-			this.size = rando; 
-			
-			this.blobid = id;
-		}				
-}*/
