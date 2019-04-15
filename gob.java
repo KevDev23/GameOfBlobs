@@ -15,13 +15,20 @@ class gob{
 		int numBlob = randy.nextInt(1) + 200;
 		
 		blob blobArray[] = new blob[numBlob];//creating obj array
+		blob blobManager = new blob();//blob object that will perform actions 
 		
 		for(int i = 0; i < numBlob; i++)//setting up blobs
 		{
 			blobArray[i] = new blob();
 			blobArray[i].init(i);
 			blobArray[i].print();
-			//System.out.println("blobID:" + blobArray[i].blobid + " blobXcoord:" + blobArray[i].xcoord + " blobycoord:" + blobArray[i].ycoord);
+		}
+		
+		while(blobManager.checkMove(numBlob))//while there are valid mvoes
+		{
+			blobManager.movement(int numBlob);
+			blobManager.merge(int numBlob);
+				
 		}
 		
 	}
