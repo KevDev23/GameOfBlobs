@@ -13,6 +13,7 @@ class gob{
 		
 		Random randy = new Random();
 		int numBlob = randy.nextInt(1) + 200;
+		boolean cycle = true;//for the while loop
 		
 		blob blobArray[] = new blob[numBlob];//creating obj array
 		blob blobManager = new blob();//blob object that will perform actions 
@@ -21,14 +22,22 @@ class gob{
 		{
 			blobArray[i] = new blob();
 			blobArray[i].init(i);
-			blobArray[i].print();
+			//blobArray[i].print();
 		}
 		
-		while(blobManager.checkMove(numBlob))//while there are valid mvoes
+		while(cycle)//while there are valid mvoes
 		{
-			blobManager.movement(int numBlob);
-			blobManager.merge(int numBlob);
-				
+			blobManager.movement(numBlob,blobArray);
+			blobManager.merge(numBlob,blobArray);
+			
+			cycle = blobManager.moveCheck(numBlob,blobArray);
+		}
+		
+		System.out.println("==============Here are the winners!==========");
+		for(int j = 0; j < numBlob; j++)
+		{
+			if(blobArray[j].size != 0)
+				blobArray[j].print();
 		}
 		
 	}

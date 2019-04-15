@@ -3,13 +3,13 @@ import java.util.Random;
 
 public class blob{
 	
-	private int xcoord;
-	private int ycoord;
-	private int size;
-	private int blobid;//identifies blob
-	private int xnext; //next x coordinate
-    private int ynext; // next y coordinate
-	private bool validmove;
+	int xcoord;
+    int ycoord;
+    int size;
+    int blobid;//identifies blob
+    int xnext; //next x coordinate
+    int ynext; // next y coordinate
+    boolean validmove;
 		
 		public void print(){//prints blob data
 			System.out.println("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
@@ -38,7 +38,7 @@ public class blob{
 
 		//find the closest blob to eat. numblob, searchingBlob is the id of the blob looking for food.
 		//If there are no possible prey items there are no valid moves for this blob, will return -1.
-		private int closestblob(int numblob, int searchingBlob){
+		private int closestBlob(int numblob, int searchingBlob,blob[] blobArray){
 			
 			int closest = -1;//will take the id of blobs that the searchingBlob can eat
 			
@@ -66,18 +66,18 @@ public class blob{
 			
 		}
 		
-		public void movement(int numblob){//decides what xnext and what ynext is and aplies it
+		public void movement(int numblob,blob[] blobArray){//decides what xnext and what ynext is and aplies it
 			
 			int meal = 0;//will be the blob to be consume
 			int xDistance = 0;
 			int yDistance = 0;
 			
 			
-				for(int i = 0; i < numblob; i++)
+				for(int i = 0; i < numblob; i++)//for each blob
 				{
-					meal = closestblob(numblob,blobArray[i].blobid);
+					meal = closestBlob(numblob,blobArray[i].blobid,blobArray);
 					
-					if(meal != -1)
+					if(meal != -1)//if meal is -1 then the blob closestBlob returned cannot move so we skip it, else we work on finding out it's new movement
 					{	
 						xDistance = max(blobArray[i].xcoord,blobArray[meal].xcoord) - min(blobArray[i].xcoord,blobArray[meal].xcoord);
 						yDistance = max(blobArray[i].ycoord,blobArray[meal].ycoord) - min(blobArray[i].ycoord,blobArray[meal].ycoord);
@@ -91,10 +91,10 @@ public class blob{
 							else{
 								  blobArray[i].xnext = blobArray[i].xcoord++;
 								}
-						blobArray[i]ynext = blobArray[i].ycoord;//the y-coordinates will not change
+						blobArray[i].ynext = blobArray[i].ycoord;//the y-coordinates will not change
 						}
 						else{
-								if(blobArray[i].ycoord > blobArray[meal.ycoord)//if blob looking for meal is farther on the y-axis...
+								if(blobArray[i].ycoord > blobArray[meal].ycoord)//if blob looking for meal is farther on the y-axis...
 								{
 									blobArray[i].ynext = blobArray[i].ycoord--;//decrease the y-axis coordinate
 								}
@@ -119,7 +119,7 @@ public class blob{
 		}
 		
 		//will merge blobs with the same coordinates
-		public void merge(int numblob){
+		public void merge(int numblob,blob[] blobArray){
 			
 			for(int i = 0; i < numblob; i++)
 			{
@@ -148,7 +148,7 @@ public class blob{
 		}
 		
 		//checks to see if blobs still have a valid movement, game ends when no blobs have a valid move
-		public boolean checkMove(int numblob){
+		public boolean checkMove(int numblob,blob[] blobArray){
 			int count = 0;
 			
 			for(int i = 0; i < numblob; i++)
