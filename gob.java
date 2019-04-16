@@ -15,7 +15,7 @@ class gob{
 	public static void main(String args[]){
 		
 		Random randy = new Random();
-		int numBlob = randy.nextInt(4) + 1;
+		int numBlob = randy.nextInt(199) + 1;
 		int count = 0;//for while loop
 		boolean cycle = true;//for the while loop
 		
@@ -61,10 +61,6 @@ class gob{
 				count = 0;//resetting count
 				}
 				
-			for(int y = 0; y < numBlob; y++)
-			{
-				blobArray[y].print();
-			}
 		}
 	
 		System.out.println("==============Here are the winners!==========");

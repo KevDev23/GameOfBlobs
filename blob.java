@@ -21,22 +21,22 @@ public class blob{
 		//initializes x,y coordinates and it's size
 		public void init(int id){
 			Random rand = new Random();
-			int rando = rand.nextInt(99) + 1;
+			int rando = rand.nextInt(999) + 1;
 				
 			this.xcoord = rando;
 				
-			rando = rand.nextInt(99) + 1;
+			rando = rand.nextInt(999) + 1;
 				
 			this.ycoord = rando;
 				
-			rando = rand.nextInt(99) + 1;
+			rando = rand.nextInt(999) + 1;
 				
 			this.size = rando; 
 			
 			this.validmove = true;
 			this.eaten = false;
-			this.xnext = 0;
-			this.ynext = 0;
+			this.xnext = this.xcoord;
+			this.ynext = this.ycoord;
 			this.blobid = id;
 		}
 
@@ -48,7 +48,7 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-				if(blobArray[searchingBlob].size > blobArray[i].size && blobArray[i].eaten == false && blobArray[i].blobid != blobArray[searchingBlob].blobid)//Select prey and if prey has not been eaten
+				if(blobArray[searchingBlob].size > blobArray[i].size && blobArray[i].eaten == false)//Select prey and if it has not been eaten
 				{
 					if(closest == -1)//if we haven't selected a possible canidate for a blob to consume set the first possible blob as the selected meal
 					{	
@@ -64,43 +64,44 @@ public class blob{
 				
 					
 			}
-		
-			return closest;
+	
+		return closest;
 				
 			
 		}
 		
 		public void movement(int numblob,blob[] blobArray){//decides what xnext and what ynext is
 			
-			int meal = -1;//will be the blob to be consume
+			int meal = 0;//will be the blob to be consume
 			int xDistance = 0;
 			int yDistance = 0;
 			
-					meal = this.closestBlob(numblob,this.blobid,blobArray);//finds the biggest possible meal
+					meal = closestBlob(numblob,this.blobid,blobArray);//finds the biggest possible meal
 					
-					if(meal != -1)//if meal is -1 then the blob closestBlob returned cannot move so we skip it, else we work on finding out it's new movement
+					if(meal != -1)//if meal is -1 then the blob closestBlob returned cannot move so we skip it, cannot make movement if validmove is false
 					{	
 						xDistance = Math.max(this.xcoord,blobArray[meal].xcoord) - Math.min(this.xcoord,blobArray[meal].xcoord);//measures how close the xcoord's are
 						yDistance = Math.max(this.ycoord,blobArray[meal].ycoord) - Math.min(this.ycoord,blobArray[meal].ycoord);//measures how close the ycoord's are
 						
-						if(xDistance < yDistance && xDistance != 0)//if blob is closer on the x-axis, only bother with movement if xDistance != 0, becuase then we are at the desired x-coordinate
-						{
+						if(xDistance < yDistance & xDistance != 0 | yDistance == 0)//determine if xDistance or if yDistance is shorter, the shorter one is the direction the blob will move.
+						{											
 							if(this.xcoord > blobArray[meal].xcoord)//if the blob looking for a meal is farther on the x-axis we need to decrement it
 							{
-								this.xnext = this.xcoord-1;
+								this.xnext--;// = this.xcoord-1;
 							}
 							else{
-								  this.xnext = this.xcoord+1;
+								  this.xnext++;// = this.xcoord+1;
 								}
 						this.ynext = this.ycoord;//the y-coordinates will not change
 						}
 						else if(yDistance != 0){//blob is closer on the y-axis or is on the same x-axis. Does not bother with setting new ycoord if yDistance is 0
+						
 								if(this.ycoord > blobArray[meal].ycoord)//if blob looking for meal is farther on the y-axis...
 								{
-									this.ynext = this.ycoord-1;//decrease the y-axis coordinate
+									this.ynext--;// = this.ycoord-1;//decrease the y-axis coordinate
 								}
 								else{
-									  this.ynext = this.ycoord+1;//increase the y-axis coordinate
+									  this.ynext++;// = this.ycoord+1;//increase the y-axis coordinate
 									}
 							this.xnext = this.xcoord;//the x-coordinates will not change 
 							}
@@ -115,18 +116,20 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-					if((blobArray[i].xcoord == this.xcoord) && (blobArray[i].ycoord == this.ycoord))//are 2 blobs on the same coordinates?
+					if(blobArray[i].xcoord == this.xcoord & blobArray[i].ycoord == this.ycoord & blobArray[i].eaten == false)//are 2 blobs on the same coordinates?
 					{
-						if(this.size > blobArray[i].size)
+						if(this.size > blobArray[i].size)//if bigger then eat
 						{
 							this.size += blobArray[i].size;
+							blobArray[i].eaten = true;
+							blobArray[i].validmove = false;
 						}
 						
-						if(this.size < blobArray[i].size)//if this blob will be eaten
+						/*if(this.size < blobArray[i].size)//if this blob will be eaten
 						{
 						  this.eaten = true;//to signify it is eaten
 						  this.validmove = false;//to signify it cannot move
-						}
+						}*/
 						//if this blob is larger than it's fellow it will eat it
 						
 					}						
