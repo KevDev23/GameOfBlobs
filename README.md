@@ -16,3 +16,5 @@ of possible prey.
     
 4) Merge
     If a blob has the same coordinates as another blob thats smaller it will eat that blob
+
+NOTE: The class files in this repository were included on accident. They are old versions of the program.
