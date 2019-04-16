@@ -13,26 +13,28 @@ public class blob{
 	boolean eaten;
 		
 		public void print(){//prints blob data
-			System.out.println("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
+			System.out.print("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
+			System.out.print(" xnext:" + this.xnext + " ynext:" + this.ynext);
+			System.out.println(" validmove:" + this.validmove + " eaten:" + this.eaten);
 		}
 		
 		//initializes x,y coordinates and it's size
 		public void init(int id){
 			Random rand = new Random();
-			int rando = rand.nextInt(999) + 1;
+			int rando = rand.nextInt(99) + 1;
 				
 			this.xcoord = rando;
 				
-			rando = rand.nextInt(999) + 1;
+			rando = rand.nextInt(99) + 1;
 				
 			this.ycoord = rando;
 				
-			rando = rand.nextInt(999) + 1;
+			rando = rand.nextInt(99) + 1;
 				
 			this.size = rando; 
 			
 			this.validmove = true;
-			this.eaten = false
+			this.eaten = false;
 			this.xnext = 0;
 			this.ynext = 0;
 			this.blobid = id;
@@ -46,7 +48,7 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-				if((blobArray[searchingBlob].size > blobArray[i].size) && (blobArray[i].eaten == false))//Select prey and if prey has not been eaten
+				if(blobArray[searchingBlob].size > blobArray[i].size && blobArray[i].eaten == false && blobArray[i].blobid != blobArray[searchingBlob].blobid)//Select prey and if prey has not been eaten
 				{
 					if(closest == -1)//if we haven't selected a possible canidate for a blob to consume set the first possible blob as the selected meal
 					{	
@@ -62,7 +64,7 @@ public class blob{
 				
 					
 			}
-			
+		
 			return closest;
 				
 			
@@ -70,41 +72,41 @@ public class blob{
 		
 		public void movement(int numblob,blob[] blobArray){//decides what xnext and what ynext is
 			
-			int meal = 0;//will be the blob to be consume
+			int meal = -1;//will be the blob to be consume
 			int xDistance = 0;
 			int yDistance = 0;
 			
-					meal = closestBlob(numblob,blobArray[i].blobid,blobArray);
+					meal = this.closestBlob(numblob,this.blobid,blobArray);//finds the biggest possible meal
 					
 					if(meal != -1)//if meal is -1 then the blob closestBlob returned cannot move so we skip it, else we work on finding out it's new movement
 					{	
-						xDistance = Math.max(this.xcoord,blobArray[meal].xcoord) - Math.min(this.xcoord,blobArray[meal].xcoord);
-						yDistance = Math.max(this.ycoord,blobArray[meal].ycoord) - Math.min(this.ycoord,blobArray[meal].ycoord);
+						xDistance = Math.max(this.xcoord,blobArray[meal].xcoord) - Math.min(this.xcoord,blobArray[meal].xcoord);//measures how close the xcoord's are
+						yDistance = Math.max(this.ycoord,blobArray[meal].ycoord) - Math.min(this.ycoord,blobArray[meal].ycoord);//measures how close the ycoord's are
 						
-						if(xDistance < yDistance)//if blob is closer on the x-axis
+						if(xDistance < yDistance && xDistance != 0)//if blob is closer on the x-axis, only bother with movement if xDistance != 0, becuase then we are at the desired x-coordinate
 						{
 							if(this.xcoord > blobArray[meal].xcoord)//if the blob looking for a meal is farther on the x-axis we need to decrement it
 							{
-								this.xnext = this.xcoord--;
+								this.xnext = this.xcoord-1;
 							}
 							else{
-								  this.xnext = this.xcoord++;
+								  this.xnext = this.xcoord+1;
 								}
 						this.ynext = this.ycoord;//the y-coordinates will not change
 						}
-						else{
+						else if(yDistance != 0){//blob is closer on the y-axis or is on the same x-axis. Does not bother with setting new ycoord if yDistance is 0
 								if(this.ycoord > blobArray[meal].ycoord)//if blob looking for meal is farther on the y-axis...
 								{
-									this.ynext = this.ycoord--;//decrease the y-axis coordinate
+									this.ynext = this.ycoord-1;//decrease the y-axis coordinate
 								}
 								else{
-									  this.ynext = this.ycoord++;//increase the y-axis coordinate
+									  this.ynext = this.ycoord+1;//increase the y-axis coordinate
 									}
 							this.xnext = this.xcoord;//the x-coordinates will not change 
 							}
 					}
 					else{
-						 this.validmove = false;//set valid moves to false since meal == -1 indicating the blob can no longer move
+						 this.validmove = false;//set valid moves to false since meal == -1 indicating the blob has no prey items
 						}
 		}
 		
@@ -123,8 +125,10 @@ public class blob{
 						if(this.size < blobArray[i].size)//if this blob will be eaten
 						{
 						  this.eaten = true;//to signify it is eaten
+						  this.validmove = false;//to signify it cannot move
 						}
 						//if this blob is larger than it's fellow it will eat it
+						
 					}						
 			
 			}
@@ -135,22 +139,5 @@ public class blob{
 				this.xcoord = this.xnext;
 				this.ycoord = this.ynext;
 		}
-		//checks to see if blobs still have a valid movement, game ends when no blobs have a valid move
-		public boolean checkMove(int numblob,blob[] blobArray){
-			int count = 0;
-			
-			for(int i = 0; i < numblob; i++)
-			{
-				if(!blobArray[i].validmove)//if valid move is false
-					count++;
-			}
-			
-			if(count == numblob)
-			{
-		      return false;
-			}
-			else{
-				  return true;
-				}
-		}
+		
 }
