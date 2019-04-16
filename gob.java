@@ -15,7 +15,7 @@ class gob{
 	public static void main(String args[]){
 		
 		Random randy = new Random();
-		int numBlob = randy.nextInt(4) + 1;
+		int numBlob = randy.nextInt(199) + 1;
 		int count = 0;//for while loop
 		boolean cycle = true;//for the while loop
 		
@@ -26,10 +26,10 @@ class gob{
 		{
 			blobArray[i] = new blob();
 			blobArray[i].init(i);
-			blobArray[i].print();
+			//blobArray[i].print();
 		}
 		
-		while(cycle)//while there are valid mvoes
+		while(cycle)//while there are valid moves. 1) Calculate movement 2) Apply movement 3)Merge 4) Check for break condition
 		{
 			//finds food, and decides on which axis to move on
 			for(int i = 0; i < numBlob; i++)

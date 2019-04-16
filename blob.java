@@ -13,9 +13,9 @@ public class blob{
 	boolean eaten;
 		
 		public void print(){//prints blob data
-			System.out.print("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
-			System.out.print(" xnext:" + this.xnext + " ynext:" + this.ynext);
-			System.out.println(" validmove:" + this.validmove + " eaten:" + this.eaten);
+			System.out.println("blobID:" + this.blobid + " Size:" + this.size + " blobXcoord:" + this.xcoord + " blobycoord:" + this.ycoord);
+			//System.out.print(" xnext:" + this.xnext + " ynext:" + this.ynext);
+			//System.out.println(" validmove:" + this.validmove + " eaten:" + this.eaten);
 		}
 		
 		//initializes x,y coordinates and it's size
