@@ -116,21 +116,16 @@ public class blob{
 			
 			for(int i = 0; i < numblob; i++)
 			{
-					if(blobArray[i].xcoord == this.xcoord & blobArray[i].ycoord == this.ycoord & blobArray[i].eaten == false)//are 2 blobs on the same coordinates?
+					if(blobArray[i].xcoord == this.xcoord & blobArray[i].ycoord == this.ycoord & blobArray[i].eaten == false & this.eaten == false)//are 2 blobs on the same coordinates?
 					{
 						if(this.size > blobArray[i].size)//if bigger then eat
 						{
+							//this.print();
+							//blobArray[i].print();
 							this.size += blobArray[i].size;
 							blobArray[i].eaten = true;
 							blobArray[i].validmove = false;
 						}
-						
-						/*if(this.size < blobArray[i].size)//if this blob will be eaten
-						{
-						  this.eaten = true;//to signify it is eaten
-						  this.validmove = false;//to signify it cannot move
-						}*/
-						//if this blob is larger than it's fellow it will eat it
 						
 					}						
 			
